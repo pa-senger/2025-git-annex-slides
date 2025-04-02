@@ -11,105 +11,187 @@
 
 %--------------------------------------
 \section{Context}
-
 \begin{frame}{Context}
   \begin{itemize}
-    \item \textbf{HPC} often requires large datasets
-    \item \textbf{Git} is not designed for large files
+    \item \textbf{HPC} often requires large datasets (meshes, post-processing data, etc.).
+    \item \textbf{Git} is not designed for large files and gets very slow.
   \end{itemize}
+  %   \vspace{0.5em}
+  \begin{center}
+    \begin{minipage}{0.49\textwidth}
+      \centering
+      \includegraphics[width=0.7\linewidth, angle=-90]{images/gaya.jpeg}
+      \captionof{figure}{Gaya HPC cluster}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.49\textwidth}
+      \centering
+      \includegraphics[width=0.8\linewidth]{images/git-logo.png}
+      \captionof{figure}{Git logo}
+    \end{minipage}
+  \end{center}
 \end{frame}
 
 \section{Possible solutions}
 \begin{frame}{Keep the data locally}
   Works but not ideal, especially for:
-  \begin{itemize}
-    \item \textbf{Collaboration} (multiple users)
-    \item \textbf{Reproducibility} (multiple runs)
-    \item \textbf{Continuous integration} (CI)
-    \item \textbf{Versioning} (multiple versions)
-    \item \textbf{Backup} (multiple copies)
-  \end{itemize}
+  \begin{center}
+    \begin{minipage}{0.49\textwidth}
+      \begin{itemize}
+        \item \textbf{Collaboration} (multiple users).
+        \item \textbf{Reproducibility} (multiple runs).
+        \item \textbf{Continuous integration} (CI).
+        \item \textbf{Versioning} (multiple versions).
+        \item \textbf{Backup} (multiple copies).
+      \end{itemize}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.49\textwidth}
+      \centering
+      \includegraphics[width=0.6\linewidth]{images/thinkpad.jpg}
+      \captionof{figure}{Laptop to keep the data locally}
+    \end{minipage}
+  \end{center}
 \end{frame}
 
 \begin{frame}{Avoidance}
-  \begin{itemize}
-    \item \textbf{File generation} on demand or at execution time
-    \item \textbf{Data reduction:} e.g. only store the most meaningful data
-    \item \textbf{User specifies} which statistics/visualization to generate at each execution
-    \item \textit{etc.}
-  \end{itemize}
+  \begin{minipage}{0.6\textwidth}
+    \begin{itemize}
+      \item \textbf{File generation} on demand or at execution time.
+      \item \textbf{Data reduction:} e.g. only store the most meaningful data.
+      \item \textbf{User specifies} which statistics/visualization to generate at each execution.
+      \item \textit{etc.}
+    \end{itemize}
+  \end{minipage}%
+  \hfill
+  \begin{minipage}{0.4\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{images/avoidance.jpg}
+  \end{minipage}
 \end{frame}
 
 \begin{frame}{Cloud storage}
-  Everyday user (e.g. Google Drive, Dropbox, OneDrive, etc.) \\
-  Targeted at scientific collaboration (e.g. Zenodo, Figshare, Dryad, OSF, etc.)\\
-  Problematics:
-  \begin{itemize}
-    \item \textbf{Requires lots of scripting} to integrate in the HPC workflow
-    \item \textbf{Requires special security measures} to protect sensitive data
-    \item \textbf{How to detect and manage errors?}
-    \item \textbf{Compatibility issues}
-  \end{itemize}
+  \textbf{For everyday user:} Google Drive, Dropbox, OneDrive, etc.\\
+  \textbf{Targeted at scientific collaboration:} Zenodo, Figshare, Dryad, OSF, etc.\\[1ex]
+  \begin{minipage}{0.6\textwidth}
+    \vspace{0.5cm}
+    \textbf{Problematics:}
+    \begin{itemize}
+      \item \textbf{Requires lots of scripting} to integrate in the HPC workflow.
+      \item \textbf{Requires special security measures} to protect sensitive data.
+      \item \textbf{How to detect and manage errors?}
+      \item \textbf{Compatibility issues}.
+    \end{itemize}
+  \end{minipage}%
+  \hfill
+  \begin{minipage}{0.35\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{images/cloud-storage.png}
+    % \captionof{figure}{Cloud storage}
+  \end{minipage}
 \end{frame}
 
 \begin{frame}{Git LFS}
-  Open source extension to Git
+  \begin{minipage}{0.4\textwidth}
+    \textbf{Open source extension to Git.}
+  \end{minipage}%
+  \hfill
+  \begin{minipage}{0.6\textwidth}
+    \includegraphics[width=0.8\linewidth]{images/git-lfs-logo.png}
+  \end{minipage}
+
+  \vspace{0.5cm}
   \begin{itemize}
-    \item Replaces large files with text pointers inside Git, while storing the file contents on a remote server
-    \item No need for custom scripting
-    \item \textbf{Consistent} between local and remote
+    \item Replaces large files with text \textbf{pointers} inside Git, while storing the file contents on a remote server.
+    \item \textbf{No need for custom scripting.}
+    \item \textbf{Consistent} between local and remote.
   \end{itemize}
-  Suboptimal usage of local storage:
+
+  \textbf{Suboptimal usage of local storage:}
   \begin{itemize}
-    \item \textbf{Uses locally twice the space} (files are duplicated in \texttt{.git/lfs})
-    \item \textbf{Large files} are automatically downloaded when cloning a repo
-    \item End users have nearly \textbf{no permission} on the remote server
+    \item \textbf{Uses locally twice the space} (files are duplicated in \texttt{.git/lfs}).
+    \item \textbf{Large files} are \textbf{automatically downloaded} when cloning a repository.
+    \item End users have \textbf{nearly no permission/control} on the remote server.
   \end{itemize}
 \end{frame}
 
 \begin{frame}{Git-annex}
-  Open source extension to Git
-  \begin{itemize}
-    \item Allows managing large files with Git without checking the file contents into Git
-    \item Uses \textbf{symlinks} to optimize local storage
-    \item \textbf{No duplication} of files
-    \item No intrinsic limit on file size or bandwidth
-  \end{itemize}
-  More controls for the user:
-  \begin{itemize}
-    \item Can decide at anytime which files to keep locally
-    \item Can use special command to download or drop files
-  \end{itemize}
+  \begin{minipage}{0.58\textwidth}
+    \textbf{Open source extension to Git.}
+    \begin{itemize}
+      \item Allows managing large files with Git without checking the file contents into Git.
+      \item Uses \textbf{symlinks} to optimize local storage.
+      \item \textbf{No duplication} of files.
+      \item No intrinsic limit on file size or bandwidth.
+    \end{itemize}
+    \vspace{0.5cm}
+    \textbf{More controls, the user can:}
+    \begin{itemize}
+      \item decide at anytime which files to keep locally.
+      \item use special command to \textbf{download} or \textbf{drop} files.
+    \end{itemize}
+  \end{minipage}%
+  \hfill
+  \begin{minipage}{0.38\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{images/git-annex-logo.png}
+    % \captionof{figure}{Git-annex logo}
+  \end{minipage}
 \end{frame}
 
 \begin{frame}{Git-annex}
-    Supports the download of large files content from either:
+  Supports the \textbf{download of large files} content from either:
   \begin{itemize}
-    \item Some other git-annex repository on another machine (provided there is a ssh connection possible)
-    \item A cloud storage provider (e.g. Amazon S3, Google Drive, Dropbox, etc.)
+    \item some \textbf{other git-annex repository} on another machine (if an ssh connection is possible).
+    \item a \textbf{cloud storage provider} (e.g. Amazon S3, Google Drive, Dropbox, etc.)
   \end{itemize}
-  Main drawback:
+  \vspace{0.5cm}
+  \textbf{Main drawback:}
   \begin{itemize}
-    \item \textbf{Non natively supported} by GitHub, GitLab, etc. (files needs to be managed with commandlines)
-    \item \textbf{Learning curve}
-    \item \textbf{Not as common} as Git LFS, support may be harder to find
+    \item \textbf{Non natively supported} by GitHub, GitLab, etc. (files needs to be managed with command lines).
+    \item \textbf{Learning curve}.
+    \item \textbf{Not as common} as Git LFS, support may be harder to find.
   \end{itemize}
 \end{frame}
 
 % --------------------------------------
-\section{Installation and Usage}
+\section{Installation and usage}
 
-\begin{frame}[fragile]{Installation and Usage}
+\begin{frame}{Installation}
+  \begin{center}
+    \begin{minipage}{0.2\textwidth}
+      \centering
+      \includegraphics[width=0.5\linewidth]{images/Tux.png}
+    \end{minipage}%
+    \begin{minipage}{0.2\textwidth}
+      \centering
+      \includegraphics[width=0.5\linewidth]{images/debian-logo.png}
+    \end{minipage}%
+    \begin{minipage}{0.2\textwidth}
+      \centering
+      \includegraphics[width=0.5\linewidth]{images/archlinux-logo.png}
+    \end{minipage}%
+    \begin{minipage}{0.2\textwidth}
+      \centering
+      \includegraphics[width=0.5\linewidth]{images/macOS-logo.png}
+    \end{minipage}
+  \end{center}
+
+  \vspace{0.5cm}
+
   \begin{itemize}
     \item \texttt{sudo apt-get install git-annex} (Debian/Ubuntu)
     \item \texttt{sudo pacman -Syu git-annex} (Arch)
     \item \texttt{brew install git-annex} (MacOS)
   \end{itemize}
+\end{frame}
 
-  Initialize and add a large file (single quotes are important):
+\begin{frame}[fragile]{Usage}
+  \textbf{Initialize and add a large file (single quotes are important):}
   \begin{lstlisting}[language=bash]
   git annex init 'PA laptop'
   git annex addurl --file=large_file.zip download_url_link
+  # no need to git add
   git commit -m "Add large_file.zip"
   git push origin main git-annex
   git annex list
@@ -118,12 +200,12 @@
 \end{frame}
 
 \begin{frame}[fragile]{Usage}
-  Retrieve a file from another repository:
+  \textbf{Retrieve a file from another repository:}
   \begin{lstlisting}[language=bash]
-    git annex init 'Alice laptop'
-    git annex get .
+      git annex init 'Alice laptop'
+      git annex get .
     \end{lstlisting}
-  Annexing a new version:
+  \textbf{Annex a newer version:}
     \begin{lstlisting}[language=bash]
       git annex drop large_file.zip
       git rm large_file.zip
@@ -134,11 +216,17 @@
 \end{frame}
 
 \begin{frame}[fragile]{Usage}
-  Retrieve the newer version:
+  \textbf{If another user wants to retrieve the newer version:}
   \begin{lstlisting}[language=bash]
     git annex sync
+    # Initialize the download :
     git annex get .
   \end{lstlisting}
+  \textbf{Check for old orphan symlinks files and their references number:}
+  \begin{lstlisting}[language=bash]
+    git annex unused
+    git annex dropunused NUMBER
+    \end{lstlisting}
 \end{frame}
 
 \begin{frame}{The end}
