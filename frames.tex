@@ -209,7 +209,7 @@
     \begin{lstlisting}[language=bash]
       git annex drop large_file.zip
       git rm large_file.zip
-      git annex addurl --file=large_file.zip download_url_link
+      git annex addurl --no-check-gitignore --file=large_file.zip download_url_link
       git commit -m "Update large_file.zip"
       git annex sync
   \end{lstlisting}
