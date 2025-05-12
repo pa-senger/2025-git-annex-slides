@@ -190,7 +190,7 @@
   \textbf{Initialize and add a large file (single quotes are important):}
   \begin{lstlisting}[language=bash]
   git annex init 'PA laptop'
-  git annex addurl --file=large_file.zip download_url_link
+  git annex addurl --no-check-gitignore --fast --file=large_file.zip download_url_link
   # no need to git add
   git commit -m "Add large_file.zip"
   git push origin main git-annex
@@ -209,7 +209,7 @@
     \begin{lstlisting}[language=bash]
       git annex drop large_file.zip
       git rm large_file.zip
-      git annex addurl --no-check-gitignore --file=large_file.zip download_url_link
+      git annex addurl --no-check-gitignore --fast --file=large_file.zip download_url_link
       git commit -m "Update large_file.zip"
       git annex sync
   \end{lstlisting}
